@@ -1,0 +1,5 @@
+#define MAXBUFSIZE 100
+
+#define CODEFORCES 1
+#define NOWCODER 2
+
