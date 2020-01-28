@@ -6,17 +6,17 @@
 
 
 int GetOnlineJudgeTypes(){
-				char buf[MAXBUFSIZE];
-				getcwd(buf,MAXBUFSIZE);
-				char *p;
-				p=strstr(buf,"codeforces");
-				if(p!=NULL){
-								return CODEFORCES;
-				}
-				p=strstr(buf,"nowcoder");
-				if(p!=NULL){
-								return NOWCODER;
-				}
-				return -1;
+  char buf[MAXBUFSIZE];
+  getcwd(buf,MAXBUFSIZE);
+	char *p;
+	p=strstr(buf,"codeforces");
+	if(p!=NULL){
+    return CODEFORCES;
+	}
+  p=strstr(buf,"nowcoder");
+  if(p!=NULL){
+    return NOWCODER;
+	}
+  return -1;
 }
 				

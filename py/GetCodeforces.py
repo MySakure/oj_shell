@@ -5,7 +5,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-f = open('blog.md', 'w')
+#f = open('blog.md', 'w')
 
 Latextag = 0
 
@@ -35,7 +35,7 @@ def Clear(text):
             break
     return text
 
-def FindInfo(soup, url):
+def FindInfo(f, soup, url):
     AllInfo = soup.find('div', {'class', 'problemindexholder'})
     divs = AllInfo.find_all('div')
     title = '# ' + divs[3].get_text()
@@ -59,7 +59,9 @@ def FindInfo(soup, url):
         f.write('## Sample Input:\n```%s```\n' % SampleInput[5:])
         f.write('## Sample Output:\n```%s```\n' % SampleOutput[6:])
     f.write('### [题目链接](%s)\n\n' % url)
-    f.write('## AC代码:\n```c++\n```\n')
+    f.write('## AC代码:\n```c++\n')
+    f.write(cpp)
+    f.write('```\n')
 def GetProblems(ContestID):
     url='http://codeforces.com/contest/'+ContestID
     #"/contest/1262/problem/B"
@@ -68,11 +70,13 @@ def GetProblems(ContestID):
     return problems
 def main():
     global Latextag
+    global cpp
     print('Welcome to use codeforces contest crawler\n')
     #Latextag = int(input("Please enter the Latex tag you need(0:'$$$',1:'$$',2:'$'):\n"))
     Latextag=2
     Url = os.getcwd().split('/')[-1]
     print(Url)
+    f=open(Url+'.md','w')
     Problem = GetProblems(Url)
     Url ="http://codeforces.com"
     inx=0
@@ -81,11 +85,18 @@ def main():
         inx+=1
         if inx&1:
             continue;
-        print(url)
+        id=url.split('/')[-1].lower()
+        if os.path.exists(id+'/'+id+'.cpp'):
+            with open(id+'/'+id+'.cpp','r') as accept:
+                cpp=accept.read()
+            print(url+'   Try or Accept')
+        else:
+            cpp=''
+            print(url)
         html = GetHtmlText(url).replace('<br />', '\n').replace('</p>', '\n').replace('<img class="tex-graphics" src="','\n![img](http:').replace('" style="max-width: 100.0%;max-height: 100.0%;" />',')\n')
         #html = GetHtmlText(url).replace('<br />', '\n').replace('</p>', '\n')
         soup = BeautifulSoup(html, "html.parser")
-        FindInfo(soup, url)
+        FindInfo(f,soup, url)
     f.close()
 
 if __name__ == '__main__':
